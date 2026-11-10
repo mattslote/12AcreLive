@@ -1,0 +1,56 @@
+---
+import ContactForm from './ContactForm.astro';
+---
+<dialog id="contact-modal" aria-labelledby="contact-modal-title">
+  <button type="button" class="modal-close" aria-label="Close contact form">&times;</button>
+  <h2 id="contact-modal-title">Tell me about your event</h2>
+  <p class="muted">Fill this out and I'll get back to you soon. Or call <a href="tel:+15093395227">509.339.5227</a>.</p>
+  <ContactForm />
+</dialog>
+<script>
+  const modal = document.getElementById('contact-modal') as HTMLDialogElement | null;
+  const w = window as any;
+
+  // Open the popup instead of navigating to /contact
+  const onContactPage = location.pathname.replace(/\/$/, '') === '/contact';
+  function open(e?: Event) {
+    if (!modal || onContactPage) return;
+    e?.preventDefault();
+    if (!modal.open) modal.showModal();
+    modal.querySelector<HTMLInputElement>('input[name=name]')?.focus();
+    w.track12?.('contact_modal_open');
+  }
+  document.addEventListener('click', (e) => {
+    const t = (e.target as HTMLElement).closest('a[href="/contact"], .contact-open');
+    if (t && !(e as MouseEvent).metaKey && !(e as MouseEvent).ctrlKey) open(e);
+  });
+  modal?.querySelector('.modal-close')?.addEventListener('click', () => modal.close());
+  modal?.addEventListener('click', (e) => { if (e.target === modal) modal.close(); });
+
+  // Submission (shared by modal and /contact page)
+  document.querySelectorAll<HTMLFormElement>('form.contact').forEach((form) => {
+    const status = form.querySelector('.status') as HTMLElement;
+    const btn = form.querySelector('button[type=submit]') as HTMLButtonElement;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.className = 'status';
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      const data: Record<string, any> = Object.fromEntries(new FormData(form));
+      btn.disabled = true; btn.textContent = 'Sending…';
+      try {
+        const res = await fetch('/api/contact', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(data) });
+        const out = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(out.error || 'Something went wrong.');
+        form.reset();
+        w.track12?.('generate_lead', { form: form.closest('dialog') ? 'contact_modal' : 'contact' });
+        status.className = 'status ok';
+        status.textContent = "Thanks! Your message is on its way. I'll get back to you soon.";
+      } catch (err) {
+        status.className = 'status err';
+        status.textContent = (err as Error).message + ' You can also email matt@12acrefilms.com.';
+      } finally {
+        btn.disabled = false; btn.textContent = 'Send message';
+      }
+    });
+  });
+</script>

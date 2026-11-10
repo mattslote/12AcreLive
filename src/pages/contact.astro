@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+import ContactForm from '../components/ContactForm.astro';
+---
+<Base title="Contact" description="Request a quote for live streaming or live event production in Spokane and the Inland Northwest. Call 509.339.5227 or send the form.">
+  <section>
+    <div class="wrap narrow">
+      <p class="eyebrow">Contact</p>
+      <h1>Tell us about your event</h1>
+      <p class="muted">Send the date, the venue, and who needs to watch. We reply with questions and a written quote.</p>
+      <p><strong>Phone</strong><br /><a href={`tel:${site.phoneHref}`}>{site.phone}</a><br /><br /><strong>Email</strong><br /><a href={`mailto:${site.email}`}>{site.email}</a></p>
+      <h2 style="margin-top:40px">Request a quote</h2>
+      <ContactForm />
+    </div>
+  </section>
+</Base>

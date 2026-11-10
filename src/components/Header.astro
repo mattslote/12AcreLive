@@ -1,0 +1,24 @@
+---
+import site from '../data/site.json';
+const { current = '/' } = Astro.props;
+const isCurrent = (href: string) => current === href || (href !== '/' && current.startsWith(href + '/'));
+---
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="12 Acre Live home"><span class="dot" aria-hidden="true"></span>12 Acre <b>Live</b></a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav" id="menu-btn">Menu</button>
+    <nav class="nav" id="nav" aria-label="Main">
+      {site.nav.map((n) => (
+        <a href={n.href} class={n.href === '/contact' ? 'nav-cta' : undefined} aria-current={isCurrent(n.href) ? 'page' : undefined}>{n.label}</a>
+      ))}
+    </nav>
+  </div>
+</header>
+<script>
+  const btn = document.getElementById('menu-btn');
+  const nav = document.getElementById('nav');
+  btn?.addEventListener('click', () => {
+    const open = nav!.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(open));
+  });
+</script>

@@ -1,0 +1,34 @@
+---
+import site from '../data/site.json';
+const ga = (site as any).ga4Id as string | undefined;
+const px = (site as any).metaPixelId as string | undefined;
+---
+{ga && (<>
+  <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${ga}`}></script>
+  <script is:inline define:vars={{ ga }}>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', ga);
+  </script>
+</>)}
+{px && (
+  <script is:inline define:vars={{ px }}>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', px);
+    fbq('track', 'PageView');
+  </script>
+)}
+{(ga || px) && (
+  <script is:inline>
+    window.track12 = function (name, params) {
+      try { if (window.gtag) gtag('event', name, params || {}); } catch (e) {}
+      try { if (window.fbq) fbq('track', name === 'generate_lead' ? 'Lead' : 'Contact', params || {}); } catch (e) {}
+    };
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="tel:"], a[href^="mailto:"]');
+      if (!a) return;
+      window.track12(a.href.indexOf('tel:') === 0 ? 'click_phone' : 'click_email', { link_url: a.href });
+    });
+  </script>
+)}

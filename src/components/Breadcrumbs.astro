@@ -1,0 +1,11 @@
+---
+const { trail } = Astro.props as { trail: { label: string; href?: string }[] };
+---
+<nav aria-label="Breadcrumb" class="wrap" style="padding-top:18px;font-size:.85rem;color:var(--muted)">
+  {trail.map((t, i) => (
+    <span>
+      {t.href ? <a href={t.href} style="text-decoration:none">{t.label}</a> : <span aria-current="page">{t.label}</span>}
+      {i < trail.length - 1 && ' › '}
+    </span>
+  ))}
+</nav>

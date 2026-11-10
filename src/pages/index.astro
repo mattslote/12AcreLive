@@ -1,0 +1,60 @@
+---
+import Base from '../layouts/Base.astro';
+import { services } from '../data/services';
+import { areas } from '../data/areas';
+import site from '../data/site.json';
+const featured = services.filter((s) => s.slug !== 'funeral-live-streaming');
+const schema = [{ '@context': 'https://schema.org', '@type': 'WebSite', '@id': 'https://12acrelive.com/#website', url: 'https://12acrelive.com/', name: '12 Acre Live', publisher: { '@id': 'https://12acrelive.com/#business' } }];
+---
+<Base schema={schema}>
+  <section class="hero-home">
+    <div class="inner" style="max-width:900px">
+      <span class="badge">Live from the Inland Northwest</span>
+      <h1>Live streaming &amp; live event production in Spokane</h1>
+      <p class="lead">Multi-camera streaming and recording for conferences, hybrid events, galas, graduations, concerts, and services. One accountable team, from the walkthrough to the final recording.</p>
+      <div class="actions">
+        <a class="btn" href="/contact">Get a live event quote</a>
+        <a class="btn ghost" href="/areas">See cities we serve</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">What we stream</p>
+      <h2>Pick your kind of event</h2>
+      <div class="grid cols-3" style="margin-top:24px">
+        {featured.map((s) => (
+          <a class="card" href={`/${s.slug}`} style="text-decoration:none">
+            <div class="body"><h3>{s.name}</h3><p class="muted" style="margin:0 0 10px">{s.short}</p><span style="color:var(--accent)">Learn more →</span></div>
+          </a>
+        ))}
+      </div>
+      <p class="muted" style="margin-top:22px">Also: <a href="/funeral-live-streaming">funeral and memorial live streaming</a>.</p>
+    </div>
+  </section>
+
+  <section class="band-grey">
+    <div class="wrap narrow">
+      <p class="eyebrow">Why 12 Acre Live</p>
+      <h2>A small team that plans like a big one</h2>
+      <ul class="prose" style="padding-left:20px">
+        <li><strong>Backed by 12 Acre Films.</strong> Since 2016, <a href={site.parent}>12 Acre Films</a> has produced video for the Washington State Department of Health, the U.S. FDA, Eastern Washington University, Spokane Parks &amp; Recreation, and TEDx Spokane.</li>
+        <li><strong>A plan before the day.</strong> Venue walkthrough, run-of-show, audio plan, and a connection plan with a backup.</li>
+        <li><strong>Local to the whole region.</strong> Based in Spokane, serving 17 cities from Yakima to Missoula, with drive times and venues listed on every city page.</li>
+        <li><strong>A recording you can use.</strong> Every event is recorded, with optional highlights and social clips.</li>
+      </ul>
+      <p><a class="btn" href="/how-it-works">See how it works</a></p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">Areas we serve</p>
+      <h2>Live streaming near you</h2>
+      <ul style="columns:3 220px;margin-top:18px">
+        {areas.map((a) => <li><a href={`/areas/${a.slug}`}>{a.name}, {a.state}</a></li>)}
+      </ul>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,119 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { areas, areaBySlug, type Area } from '../../data/areas';
+import { bySlug } from '../../data/services';
+import site from '../../data/site.json';
+
+export function getStaticPaths() {
+  return areas.map((a) => ({ params: { city: a.slug }, props: { a } }));
+}
+const { a } = Astro.props as { a: Area };
+const home = a.drive === 'home base';
+const where = `${a.name}, ${a.state}`;
+const url = `https://12acrelive.com/areas/${a.slug}`;
+const nearby = a.nearby.map((s) => areaBySlug[s]).filter(Boolean);
+const uses = a.uses.map(([s, t]) => ({ svc: bySlug[s], text: t })).filter((u) => u.svc);
+const list = (xs: string[]) => xs.length < 3 ? xs.join(' and ') : xs.slice(0, -1).join(', ') + ', and ' + xs[xs.length - 1];
+const lower = (t: string) => t.charAt(0).toLowerCase() + t.slice(1);
+const faqs = [
+  a.localFaq,
+  { q: `What kinds of events do you live stream in ${a.name}?`, a: `Most often ${uses.map((u) => u.svc.name.toLowerCase()).join(', ')}. We also cover other live events; see our services page for the full list.` },
+  { q: `Can you stream from a venue like ${a.places[0]}?`, a: `We plan for the room you have. Before the event we review the venue's layout, audio, and internet, ideally with a walkthrough or a call with venue staff, and build the camera and connection plan around it.` },
+  { q: `How far ahead should we book in ${a.name}?`, a: `As early as you can, especially for large events and busy seasons. For short-notice events, call ${site.phone} and we will tell you honestly whether we can do it.` },
+  { q: `How do I get a quote for an event in ${a.name}?`, a: `Send the date, venue, and who needs to watch through our contact page or call ${site.phone}. We reply with questions and a written quote.` },
+];
+const title = `Live Streaming & Event Production in ${where}`;
+const description = `Multi-camera live streaming and live event production in ${where}, ${home ? 'based right here in Spokane' : a.drive + ' from our Spokane base'}. Local venues, events, and a written quote. Call ${site.phone}.`;
+const schema = [
+  { '@context': 'https://schema.org', '@type': 'Service', name: `Live streaming and live event production in ${where}`, serviceType: 'Live streaming', url, description,
+    provider: { '@id': 'https://12acrelive.com/#business' },
+    areaServed: { '@type': 'City', name: a.name, containedInPlace: { '@type': 'AdministrativeArea', name: a.county } } },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://12acrelive.com/' },
+    { '@type': 'ListItem', position: 2, name: 'Areas we serve', item: 'https://12acrelive.com/areas' },
+    { '@type': 'ListItem', position: 3, name: a.name, item: url },
+  ] },
+];
+---
+<Base title={title} description={description} schema={schema}>
+  <Breadcrumbs trail={[{ label: 'Home', href: '/' }, { label: 'Areas we serve', href: '/areas' }, { label: a.name }]} />
+  <section class="hero" style="padding-top:70px">
+    <div class="wrap">
+      <p class="eyebrow">{a.region} · {a.county}, {a.state}</p>
+      <h1>Live streaming &amp; live event production in {a.name}, {a.state}</h1>
+      <p class="lead">{a.intro}</p>
+      <div class="actions">
+        <a class="btn" href="/contact">Get a quote for {a.name}</a>
+        <a class="btn ghost" href={`tel:${site.phoneHref}`}>Call {site.phone}</a>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:64px">
+    <div class="wrap narrow prose">
+      <div class="facts">
+        <div class="fact"><span>From Spokane</span><strong>{home ? 'Home base' : a.drive}</strong></div>
+        <div class="fact"><span>Region</span><strong>{a.region}</strong></div>
+        <div class="fact"><span>County</span><strong>{a.county}</strong></div>
+        <div class="fact"><span>Population</span><strong>{a.pop}</strong></div>
+      </div>
+
+      <h2>Events we stream and record in {a.name}</h2>
+      <p>Every event gets a camera plan, an audio plan, and a connection plan before the day. In {a.name}, these are the services people book most:</p>
+      {uses.map((u) => (
+        <div style="margin-top:22px">
+          <h3><a href={`/${u.svc.slug}`}>{u.svc.name}</a></h3>
+          <p>{u.text}.</p>
+        </div>
+      ))}
+
+      <h2 style="margin-top:48px">Venues and events we plan around in {a.name}</h2>
+      <p>Knowing the room matters for camera positions, audio, and internet. These are some of the places in and around {a.name} where live events happen:</p>
+      <ul>{a.places.map((p) => <li>{p}</li>)}</ul>
+      <p>Local events that often call for live streaming or recording include {list(a.events)}.</p>
+
+      <h2 style="margin-top:48px">Who books live production in {a.name}</h2>
+      <p>{a.name}'s economy is built around {list(a.sectors)}. Organizations in these fields use live production for conferences, trainings, ceremonies, and community events that need to reach people who cannot be in the room.</p>
+
+      <h2 style="margin-top:48px">Planning an event in {a.name}: what we need from you</h2>
+      <ul>
+        <li>The date, start and end times, and the venue</li>
+        <li>Who needs to watch, and where (YouTube, Facebook, LinkedIn, or your own website)</li>
+        <li>Your program: speakers, performers, or presenters, and whether slides or video will play</li>
+        <li>The name of a contact at the venue so we can plan audio, power, and internet</li>
+        <li>Whether you want a recording, highlights, or social clips afterward</li>
+      </ul>
+
+      <h2 style="margin-top:48px">{home ? 'Based in Spokane' : `Getting to ${a.name}`}</h2>
+      <p>{home
+        ? '12 Acre Live is based in the Spokane area, so site visits and walkthroughs are easy to arrange.'
+        : `${a.name} is ${a.drive} from our Spokane base. We build arrival, setup, and testing time into the plan so the stream is ready before your doors open.`}
+        See the <a href="/how-it-works">full process</a> or browse <a href="/services">all services</a>.</p>
+
+      <h2 style="margin-top:48px">Also serving near {a.name}</h2>
+      <p>{nearby.map((n, i) => <span><a href={`/areas/${n.slug}`}>Live streaming in {n.name}</a>{i < nearby.length - 1 ? ', ' : ''}</span>)}, and the rest of the <a href="/areas">Inland Northwest</a>.</p>
+    </div>
+  </section>
+
+  <section id="faq" style="background:var(--surface);border-block:1px solid var(--line)">
+    <div class="wrap narrow">
+      <h2>Frequently asked questions</h2>
+      {faqs.map((f) => (
+        <details style="border-bottom:1px solid var(--line);padding:14px 0">
+          <summary style="cursor:pointer;font-weight:600">{f.q}</summary>
+          <p class="muted" style="margin:10px 0 0">{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <section style="text-align:center">
+    <div class="wrap narrow">
+      <h2>Planning an event in {a.name}?</h2>
+      <p class="muted">Tell us what you have in mind and we will reply with questions and a quote.</p>
+      <p><a class="btn" href="/contact">Get a quote</a></p>
+    </div>
+  </section>
+</Base>

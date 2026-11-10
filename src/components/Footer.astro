@@ -1,0 +1,36 @@
+---
+import site from '../data/site.json';
+import { services } from '../data/services';
+import { areas } from '../data/areas';
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <strong style="color:var(--text)">{site.name}</strong><br />
+      Spokane, WA · Serving the Inland Northwest<br />
+      <a href={`mailto:${site.email}`}>{site.email}</a> · <a href={`tel:${site.phoneHref}`}>{site.phone}</a>
+    </div>
+    <div class="links">
+      <a href={site.parent}>12 Acre Films</a>
+      <a href={site.instagram} rel="noopener">Instagram</a>
+      <a href="/contact">Contact</a>
+    </div>
+  </div>
+  <div class="wrap foot-menu" style="grid-template-columns:repeat(2,1fr)">
+    <details>
+      <summary>Services</summary>
+      <ul>
+        {services.map((s) => <li><a href={`/${s.slug}`}>{s.name}</a></li>)}
+      </ul>
+    </details>
+    <details>
+      <summary>Areas we serve</summary>
+      <ul>
+        {areas.map((a) => <li><a href={`/areas/${a.slug}`}>Live streaming in {a.name}, {a.state}</a></li>)}
+        <li><a href="/areas">All areas</a></li>
+      </ul>
+    </details>
+  </div>
+  <div class="wrap copy">© {year} {site.name}, a division of <a href={site.parent}>12 Acre Films</a></div>
+</footer>

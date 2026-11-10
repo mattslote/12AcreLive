@@ -1,0 +1,19 @@
+{
+  "name": "12 Acre Live",
+  "tagline": "Live Streaming & Live Event Production",
+  "email": "matt@12acrefilms.com",
+  "phone": "509.339.5227",
+  "phoneHref": "+15093395227",
+  "parent": "https://www.12acrefilms.com",
+  "instagram": "https://instagram.com/12acrefilms",
+  "facebook": "https://facebook.com/12acrefilms",
+  "description": "12 Acre Live provides multi-camera live streaming and live event production in Spokane and across the Inland Northwest: conferences, hybrid events, galas, graduations, concerts, church services, and webinars.",
+  "nav": [
+    { "label": "Services", "href": "/services" },
+    { "label": "Areas", "href": "/areas" },
+    { "label": "How it works", "href": "/how-it-works" },
+    { "label": "Contact", "href": "/contact" }
+  ],
+  "ga4Id": "",
+  "metaPixelId": ""
+}

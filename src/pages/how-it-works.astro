@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import site from '../data/site.json';
+const steps = [
+  ['Conversation', 'Tell us the event, the date, the venue, and who needs to watch. We ask questions and tell you honestly what it takes.'],
+  ['Planning', 'Venue walkthrough or call with venue staff, internet plan, run-of-show, and a list of speakers and presenters.'],
+  ['Setup', 'Cameras, audio, and graphics go in and are tested before doors open.'],
+  ['Live', 'The stream runs while your event happens, with a backup plan for connectivity.'],
+  ['Delivery', 'The recording is delivered afterward, with optional highlight edits and social clips.'],
+];
+const schema = [{ '@context': 'https://schema.org', '@type': 'HowTo', name: 'How a live event comes together with 12 Acre Live', step: steps.map(([n, t], i) => ({ '@type': 'HowToStep', position: i + 1, name: n, text: t })) }];
+---
+<Base title="How Live Event Production Works" description="From the first conversation to the final recording: how 12 Acre Live plans, streams, and delivers a live event." schema={schema}>
+  <Breadcrumbs trail={[{ label: 'Home', href: '/' }, { label: 'How it works' }]} />
+  <section>
+    <div class="wrap narrow">
+      <p class="eyebrow">Process</p>
+      <h1>How a live event comes together</h1>
+      <p class="muted">A live stream is your one shot. There is no retake, so the work happens before the day.</p>
+      <ol class="steps" style="margin-top:28px">
+        {steps.map(([n, t]) => <li><strong>{n}.</strong> {t}</li>)}
+      </ol>
+      <p style="margin-top:32px"><a class="btn" href="/contact">Get a live event quote</a> &nbsp; <a href={`tel:${site.phoneHref}`}>or call {site.phone}</a></p>
+    </div>
+  </section>
+</Base>

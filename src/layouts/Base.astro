@@ -1,0 +1,87 @@
+---
+import '../styles/global.css';
+import site from '../data/site.json';
+import Header from '../components/Header.astro';
+import ContactModal from '../components/ContactModal.astro';
+import Footer from '../components/Footer.astro';
+import Analytics from '../components/Analytics.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  schema?: object[];
+  noindex?: boolean;
+}
+const { title, description = site.description, schema = [], noindex = false } = Astro.props;
+const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | ${site.tagline} in Spokane, WA`;
+const cleanPath = Astro.url.pathname.replace(/(^|\/)index\.html$/, '/').replace(/\.html$/, '');
+const canonical = new URL(cleanPath || '/', Astro.site).href;
+const robots = noindex ? 'noindex,follow' : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1';
+
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': 'https://12acrelive.com/#business',
+  name: site.name,
+  description: site.description,
+  url: 'https://12acrelive.com/',
+  parentOrganization: { '@type': 'Organization', name: '12 Acre Films', url: site.parent },
+  foundingDate: '2016',
+  founder: { '@type': 'Person', name: 'Matt Slotemaker' },
+  telephone: site.phone,
+  email: site.email,
+  areaServed: ['Spokane', 'Spokane Valley', "Coeur d'Alene", 'Pullman', 'Moscow', 'Tri-Cities', 'Yakima', 'Wenatchee', 'Walla Walla', 'Missoula'],
+  address: { '@type': 'PostalAddress', addressLocality: 'Spokane', addressRegion: 'WA', addressCountry: 'US' },
+  sameAs: [site.parent, site.instagram, site.facebook],
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta name="robots" content={robots} />
+    <meta name="theme-color" content="#0b0b0f" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+    {schema.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+    <slot name="head" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" /></noscript>
+    <Analytics />
+  </head>
+  <body class={['/', '/index', '/index.html'].includes(Astro.url.pathname) ? 'home' : undefined}>
+    <a class="skip" href="#main">Skip to content</a>
+    <Header current={Astro.url.pathname} />
+    <main id="main"><slot /></main>
+    {!['/contact','/404'].includes(Astro.url.pathname.replace(/\/$/, '')) && (
+      <section class="bottom-cta">
+        <div class="wrap narrow">
+          <h2>Planning an event?</h2>
+          <p class="muted">Tell us the date, the venue, and who needs to watch. We reply with questions and a written quote.</p>
+          <button type="button" class="btn contact-open">Get a quote</button>
+        </div>
+      </section>
+    )}
+    <Footer />
+    <ContactModal />
+  </body>
+</html>

@@ -1,0 +1,35 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { areas, areaRegions } from '../../data/areas';
+import site from '../../data/site.json';
+const schema = [{ '@context': 'https://schema.org', '@type': 'ItemList', name: 'Areas served by 12 Acre Live',
+  itemListElement: areas.map((a, i) => ({ '@type': 'ListItem', position: i + 1, name: `${a.name}, ${a.state}`, url: `https://12acrelive.com/areas/${a.slug}` })) }];
+---
+<Base title="Areas We Serve: Live Streaming from Spokane to Missoula" description="12 Acre Live streams and records events in Spokane, North Idaho, the Palouse, the Tri-Cities, Yakima, Wenatchee, Walla Walla, and Montana. See drive times and local venues." schema={schema}>
+  <Breadcrumbs trail={[{ label: 'Home', href: '/' }, { label: 'Areas we serve' }]} />
+  <section class="hero" style="padding-top:70px">
+    <div class="wrap">
+      <p class="eyebrow">Service area</p>
+      <h1>Live streaming across the Inland Northwest</h1>
+      <p class="lead">One Spokane-based team, 17 cities, from Yakima to Missoula. Pick your city to see drive time from Spokane, the venues and events we plan around, and the services people there book most.</p>
+    </div>
+  </section>
+  <section style="padding-top:88px">
+    <div class="wrap">
+      {areaRegions.map((r) => (
+        <div style="margin-bottom:40px">
+          <h2>{r}</h2>
+          <div class="grid cols-3" style="margin-top:18px">
+            {areas.filter((a) => a.region === r).map((a) => (
+              <a class="card" href={`/areas/${a.slug}`} style="text-decoration:none">
+                <div class="body"><h3>{a.name}, {a.state}</h3><p class="muted" style="margin:0">{a.drive === 'home base' ? 'Home base' : `${a.drive} from Spokane`}</p></div>
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
+      <p class="muted">Don't see your town? <a href="/contact">Ask</a>. Call {site.phone}.</p>
+    </div>
+  </section>
+</Base>

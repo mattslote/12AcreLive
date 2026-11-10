@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { services } from '../data/services';
+const schema = [{ '@context': 'https://schema.org', '@type': 'ItemList', name: '12 Acre Live services',
+  itemListElement: services.map((s, i) => ({ '@type': 'ListItem', position: i + 1, name: s.name, url: `https://12acrelive.com/${s.slug}` })) }];
+---
+<Base title="Live Streaming & Event Production Services in Spokane, WA" description="Conference, hybrid, gala, webinar, church, graduation, concert, and funeral live streaming plus multi-camera event recording across Spokane and the Inland Northwest." schema={schema}>
+  <Breadcrumbs trail={[{ label: 'Home', href: '/' }, { label: 'Services' }]} />
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">Services</p>
+      <h1>Live event production services</h1>
+      <p class="muted" style="max-width:680px">Every event gets a camera plan, a clean audio plan, and a connection plan before the day. Pick the kind of event you are running.</p>
+      <div class="grid cols-3" style="margin-top:32px">
+        {services.map((s) => (
+          <a class="card" href={`/${s.slug}`} style="text-decoration:none">
+            <div class="body"><h3>{s.name}</h3><p class="muted" style="margin:0 0 10px">{s.short}</p><span style="color:var(--accent)">Learn more →</span></div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
