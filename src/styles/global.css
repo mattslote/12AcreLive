@@ -211,19 +211,19 @@ dialog#contact-modal h2 { margin-top: 0; }
 :root { --accent: #d63a1f; --accent-ink: #fff; --live: #0b0b0f; }
 .site-header { background: var(--live); color: #fff; border-bottom: 0; }
 .site-header .wrap { height: 72px; }
-.brand { font-size: 1.35rem; font-weight: 400; color: #fff; text-decoration: none; letter-spacing: .01em; display: flex; align-items: center; gap: 10px; line-height: 1; }
-.brand b { font-weight: 700; color: #fff; }
+.brand { font-size: 1.35rem; font-weight: 500; color: #fff; text-decoration: none; letter-spacing: .01em; display: flex; align-items: center; gap: 10px; line-height: 1; }
+.brand b { font-weight: 500; color: #fff; }
 .brand .dot { width: 11px; height: 11px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 0 #d63a1f99; animation: pulse 2s infinite; }
 @keyframes pulse { 70% { box-shadow: 0 0 0 9px #d63a1f00; } 100% { box-shadow: 0 0 0 0 #d63a1f00; } }
 @media (prefers-reduced-motion: reduce) { .brand .dot { animation: none; } }
-.nav a { color: #fff; font-size: .9rem; }
+.nav a { color: #fff; font-size: .82rem; font-weight: 300; }
 .menu-btn { color: #fff; border-color: #ffffff55; }
 @media (max-width: 860px) { .nav { top: 72px; background: var(--live); border-bottom: 0; } .nav a { border-bottom-color: #ffffff22; } }
 .hero, .hero-home { background: radial-gradient(1200px 500px at 80% -10%, #d63a1f33, transparent 60%), linear-gradient(#0b0b0f, #15151c); }
 .hero-home { min-height: 82svh; padding: 140px 0 90px; }
 .hero-home::after { display: none; }
-.hero-home h1 { font-weight: 600; font-size: clamp(2.4rem, 6vw, 4.4rem); max-width: 900px; margin-inline: auto; }
-.hero-home .lead { font-size: 1.15rem; color: #d7d9de; max-width: 720px; margin: 22px auto 0; }
+.hero-home h1 { font-weight: 500; font-size: clamp(2.4rem, 6vw, 4.4rem); max-width: 900px; margin-inline: auto; }
+.hero-home .lead { font-weight: 300; font-size: 1.15rem; color: #d7d9de; max-width: 720px; margin: 22px auto 0; }
 .hero-home .actions, .hero .actions { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-top: 28px; }
 .hero-home .btn.ghost { color: #fff; border-color: #ffffff88; }
 .badge { display: inline-flex; align-items: center; gap: 8px; border: 1px solid #ffffff44; border-radius: 99px; padding: 6px 14px; font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 20px; color: #fff; }
